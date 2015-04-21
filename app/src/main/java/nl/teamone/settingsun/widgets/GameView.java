@@ -10,11 +10,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import nl.teamone.settingsun.game.Field;
 import nl.teamone.settingsun.utils.PixelUtils;
 
 public class GameView extends View {
 
     Paint borderPaint, gridPaint, bottomBorderPaint;
+    protected Field field;
 
     public GameView(Context context) {
         super(context);
@@ -49,6 +51,8 @@ public class GameView extends View {
         gridPaint = new Paint();
         gridPaint.setColor(Color.parseColor("#666666"));
         gridPaint.setStrokeWidth(PixelUtils.getPixelsFromDp(getContext(), 1));
+
+        field = new Field();
     }
 
     @Override

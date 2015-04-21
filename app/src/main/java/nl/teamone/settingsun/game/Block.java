@@ -10,8 +10,14 @@ public class Block {
     public Block(Position p, int x, int y){
         this.sizeX = x;
         this.sizeY = y;
-        this.pos.X = p.getX();
-        this.pos.Y = p.getX();
+        this.pos = new Position(p.getX(), p.getY());
+
+        for (int px = 0; px < x; px++) {
+            for (int py = 0; py < y; py++) {
+                Field.fillMatrix[px+p.getX()][py+p.getY()] = true;
+            }
+        }
+
     }
     public boolean move(Direction d){
         int x, y;
