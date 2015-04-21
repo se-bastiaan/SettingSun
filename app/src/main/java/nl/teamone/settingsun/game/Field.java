@@ -43,8 +43,22 @@ public class Field {
 
     public void undoMove() {
         if (moves.size() > 0) {
-            moves.pop().undo();
+            moves.pop().undo(); // Ignore the returned boolean, since the reverse move should always be possible.
         }
+    }
+
+    public boolean doMove(Block b, Direction dir, int dist) {
+        Stack<Move> tempMoves = new Stack<>();
+        for (int i = 0; i < dist; i++) {
+            if (! b.move(dir)) {
+                while (tempMoves.size() > 0)
+                        tempMoves.pop().undo();
+                return false;
+            }
+            tempMoves.push(new Move(b, dir, 1));
+        }
+        moves.push(new Move(b, dir, dist));
+        return true;
     }
 
 }
