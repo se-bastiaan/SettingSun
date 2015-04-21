@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">Setting Sun</string>
 
-    <string name="score">Score:</string>
-    <string name="highscore">High Score:</string>
-
+    <string name="score">Score</string>
+    <string name="highscore">High score</string>
 
     <string name="action_settings">Settings</string>
 </resources>
