@@ -2,6 +2,10 @@
     <string name="app_name">Setting Sun</string>
     <string name="title_activity_main">Setting Sun</string>
 
+    <string name="score">Score:</string>
+    <string name="highscore">High score:</string>
+
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 </resources>
