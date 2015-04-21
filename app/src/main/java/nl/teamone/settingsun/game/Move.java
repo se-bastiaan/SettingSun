@@ -14,10 +14,10 @@ public class Move {
     public void undo() {
         Direction reverseMove;
         switch (direction) {
-            case North: reverseMove = Direction.South; break;
-            case East:  reverseMove = Direction.West; break;
-            case South: reverseMove = Direction.North; break;
-            default:    reverseMove = Direction.South; break;
+            case NORTH: reverseMove = Direction.SOUTH; break;
+            case EAST:  reverseMove = Direction.WEST; break;
+            case SOUTH: reverseMove = Direction.NORTH; break;
+            default:    reverseMove = Direction.SOUTH; break;
         }
         for(int i = 0; i < distance; i++)
             block.move(reverseMove);
