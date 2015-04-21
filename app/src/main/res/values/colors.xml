@@ -3,4 +3,7 @@
     <color name="primary">#fbca37</color>
     <color name="primary_dark">#ffd3aa2e</color>
     <color name="accent">#f48136</color>
+
+    <color name="score_text">#333333</color>
+    <color name="bg">#333333</color>
 </resources>
