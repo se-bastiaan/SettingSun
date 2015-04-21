@@ -1,4 +1,4 @@
-package nl.teamone.settingsun.utils;
+package nl.teamone.settingsun.game;
 
 /**
  * Created by shemels on 21-4-2015.
