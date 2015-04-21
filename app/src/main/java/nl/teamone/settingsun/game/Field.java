@@ -48,6 +48,11 @@ public class Field {
         blockList.add(new Block(new Position(2, 4), 1, 1));
     }
 
+    // We probably need this method to allow for the UI to actually do anything at all.
+    public List<Block> getBlocks() {
+        return blockList;
+    }
+
     public int getMoveCount() {
         // The amount of moves done is equal to the size of the stack. The starting position
         // has an empty stack that will return zero.
