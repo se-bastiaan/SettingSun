@@ -3,6 +3,8 @@
 
     <string name="score">Score</string>
     <string name="highscore">High score</string>
+    <string name="back">Back to last position</string>
+    <string name="restart">Restart game</string>
 
     <string name="action_settings">Settings</string>
 </resources>
