@@ -1,9 +1,5 @@
 package nl.teamone.settingsun.game;
 
-
-/**
- * Created by Robin on 21/04/2015.
- */
 public class Move {
     protected final Block block;
     protected final Direction direction;

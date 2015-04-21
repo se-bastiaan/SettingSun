@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-/**
- * Created by Robin on 21/04/2015.
- */
 public class Field {
 
     protected static boolean[][] fillMatrix;
