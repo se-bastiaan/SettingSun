@@ -1,13 +1,10 @@
 package nl.teamone.settingsun.game;
 
-/**
- * Created by shemels on 21-4-2015.
- */
 public enum Direction {
-    North(0,-1),
-    East(1,0),
-    South(0,1),
-    West(-1,0);
+    NORTH(0,-1),
+    EAST(1,0),
+    SOUTH(0,1),
+    WEST(-1,0);
 
     private int x, y;
 

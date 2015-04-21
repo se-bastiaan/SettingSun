@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-/**
- * Created by Robin on 21/04/2015.
- */
 public class Field {
 
     // A simple matrix so the blocks can check whether a position they want to move to is available.

@@ -1,8 +1,5 @@
 package nl.teamone.settingsun.game;
 
-/**
- * Created by shemels on 21-4-2015.
- */
 public class Block {
     protected int sizeX;
     protected int sizeY;

@@ -1,9 +1,5 @@
 package nl.teamone.settingsun.game;
 
-
-/**
- * Created by Robin on 21/04/2015.
- */
 public class Move {
     protected final Block block;
     protected final Direction direction;
@@ -24,10 +20,10 @@ public class Move {
         // We reverse the direction this move was originally made in.
         Direction reverseMove;
         switch (direction) {
-            case North: reverseMove = Direction.South; break;
-            case East:  reverseMove = Direction.West; break;
-            case South: reverseMove = Direction.North; break;
-            default:    reverseMove = Direction.South; break;
+            case NORTH: reverseMove = Direction.SOUTH; break;
+            case EAST:  reverseMove = Direction.WEST; break;
+            case SOUTH: reverseMove = Direction.NORTH; break;
+            default:    reverseMove = Direction.SOUTH; break;
         }
         // And then just move in that reverse direction.
         for(int i = 0; i < distance; i++)

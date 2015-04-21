@@ -1,8 +1,5 @@
 package nl.teamone.settingsun.game;
 
-/**
- * Created by shemels on 21-4-2015.
- */
 public class Position {
     protected int X;
     protected int Y;

@@ -2,6 +2,7 @@ package nl.teamone.settingsun.widgets;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +13,7 @@ import android.view.View;
 
 import nl.teamone.settingsun.game.Field;
 import nl.teamone.settingsun.utils.PixelUtils;
+import nl.teamone.settingsun.utils.PrefUtils;
 
 public class GameView extends View {
 
@@ -39,6 +41,9 @@ public class GameView extends View {
         init();
     }
 
+    /**
+     * Initialise GameView
+     */
     private void init() {
         borderPaint = new Paint();
         borderPaint.setColor(Color.parseColor("#FFFFFF"));
@@ -55,6 +60,10 @@ public class GameView extends View {
         field = new Field();
     }
 
+    /**
+     * Main OnDraw
+     * @param canvas {@link android.graphics.Canvas}
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -80,11 +89,11 @@ public class GameView extends View {
         canvas.drawLine(columnWidth, canvas.getHeight(), columnWidth * 3, canvas.getHeight(), bottomBorderPaint);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
+    /**
+     * Touch event listener
+     * @param event {@link android.view.MotionEvent}
+     * @return {@link java.lang.Boolean}
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
