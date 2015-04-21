@@ -2,6 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="nl.teamone.settingsun.MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/back" android:icon="@drawable/ic_action_back"
+     android:title ="back to last position"/>
+    <item android:id="@+id/delete" android:icon="@drawable/ic_action_delete"
+     android:title = "back to start position"   />
 </menu>
