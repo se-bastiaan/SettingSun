@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Setting Sun</string>
-    <string name="title_activity_main">Setting Sun</string>
 
     <string name="score">Score:</string>
     <string name="highscore">High score:</string>
