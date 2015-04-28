@@ -32,20 +32,20 @@ public class Field {
         // Also make an empty movelist.
         moves = new Stack<>();
         // The two vertical blocks top left and right.
-        blockList.add(new Block(new Position(0, 0), 1, 2));
-        blockList.add(new Block(new Position(3, 0), 1, 2));
+        blockList.add(new Block(0, 0, 1, 2));
+        blockList.add(new Block(0, 3, 1, 2));
         // The big block in the top center.
-        blockList.add(new Block(new Position(1, 0), 2, 2));
+        blockList.add(new Block(0, 1, 2, 2));
         // The horizontal block in the center.
-        blockList.add(new Block(new Position(1, 2), 2, 1));
+        blockList.add(new Block(2, 1, 2, 1));
         // The two vertical blocks bottom left and right.
-        blockList.add(new Block(new Position(0, 3), 1, 2));
-        blockList.add(new Block(new Position(3, 3), 1, 2));
+        blockList.add(new Block(3, 0, 1, 2));
+        blockList.add(new Block(3, 3, 1, 2));
         // And finally the four single blocks down the bottom.
-        blockList.add(new Block(new Position(1, 3), 1, 1));
-        blockList.add(new Block(new Position(1, 4), 1, 1));
-        blockList.add(new Block(new Position(2, 3), 1, 1));
-        blockList.add(new Block(new Position(2, 4), 1, 1));
+        blockList.add(new Block(3, 1, 1, 1));
+        blockList.add(new Block(4, 1, 1, 1));
+        blockList.add(new Block(3, 2, 1, 1));
+        blockList.add(new Block(4, 2, 1, 1));
     }
 
     // We probably need this method to allow for the UI to actually do anything at all.

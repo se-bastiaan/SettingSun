@@ -1,36 +1,136 @@
 package nl.teamone.settingsun.game;
 
-public class Block {
-    protected int sizeX;
-    protected int sizeY;
-    private Position pos;
-    public Block(Position p, int x, int y){
-        this.sizeX = x;
-        this.sizeY = y;
-        this.pos = new Position(p.getX(), p.getY());
+import android.content.Context;
+import android.graphics.Rect;
+import android.util.SparseArray;
+import android.widget.RelativeLayout;
 
-        // This is where we fill the Field.fillMatrix with 'true' on all the spaces this block occupies.
-        for (int px = 0; px < x; px++) {
-            for (int py = 0; py < y; py++) {
-                Field.fillMatrix[px+p.getX()][py+p.getY()] = true;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Represents a block in a matrix-like board with columns and rows.
+ * The block is identified by the coordinates of the top-left corner, but it can be bigger and thus take more space.
+ * That space and the other coordinates it has are calculated and also taken into account when comparing with other blocks.
+ */
+public class Block {
+
+    private Coordinate mCoordinate;
+    private int mWidth;
+    private int mHeight;
+    private Coordinate mPrevCoordinate;
+
+    private List<Integer> mUsedRows;
+    private List<Integer> mUsedColumns;
+
+    public Block(int row, int column, int width, int height) {
+        mUsedRows = new ArrayList<>(height);
+        mUsedColumns = new ArrayList<>(width);
+
+        mWidth = width;
+        mHeight = height;
+
+        mCoordinate = new Coordinate(row, column);
+        setRow(row);
+        setColumn(column);
+    }
+
+    public boolean matches(Block pos) {
+        return mCoordinate.matches(pos.getCoordinate()) && (pos.mHeight == mHeight) && (pos.mWidth == mWidth);
+    }
+
+    public boolean sharesAxisWith(Block pos) {
+        return mUsedColumns.contains(pos.getCoordinate().getColumn()) || mUsedRows.contains(pos.getCoordinate().getColumn());
+    }
+
+    public boolean isToRightOf(Block pos) {
+        return mCoordinate.isToRightOf(pos.getCoordinate());
+    }
+
+    public boolean isToLeftOf(Block pos) {
+        return mCoordinate.isToLeftOf(pos.getCoordinate());
+    }
+
+    public boolean isAbove(Block pos) {
+        return mCoordinate.isAbove(pos.getCoordinate());
+    }
+
+    public boolean isBelow(Block pos) {
+        return mCoordinate.isBelow(pos.getCoordinate());
+    }
+
+    public void setColumn(int column) {
+        mCoordinate.setColumn(column);
+
+        for(int i = 0; i < mWidth; i++) {
+            if(mUsedColumns.size() <= i) {
+                mUsedColumns.add(i, column + i);
+            } else {
+                mUsedColumns.set(i, column + i);
             }
         }
-
     }
-    public boolean move(Direction d){
-        int x, y;
-        x = this.pos.X+d.getX();
-        y = this.pos.Y+d.getY();
-        return !(x > 3 || y > 4);
 
-        // TODO: We should add a bit to this method!
-        // First, we'll need to check whether the position we're moving to can contain the block.
-        // For this, we can use the fillMatrix and the bounds.
-        // If we can't, we'll need to return false.
-        // Otherwise, we can make the move.
-        // We'll first need to set the fillMatrix to -false- where we are right now.
-        // After that, modify the X and Y values to move the block.
-        // And finally we should set the fillMatrix -true- on our new position.
-        // Then we can return true and be awesome and stuff.
+    public void setRow(int row) {
+        mCoordinate.setRow(row);
+
+        for(int i = 0; i < mWidth; i++) {
+            if(mUsedRows.size() <= i) {
+                mUsedRows.add(i, row + i);
+            } else {
+                mUsedRows.set(i, row + i);
+            }
+        }
     }
+
+    public void setCoordinate(Coordinate c) {
+        setColumn(c.getColumn());
+        setRow(c.getRow());
+    }
+
+    public Coordinate getCoordinate() {
+        return mCoordinate;
+    }
+
+    public Coordinate getPrevCoordinate() {
+        return mPrevCoordinate;
+    }
+
+    public boolean move(Direction d) {
+        mPrevCoordinate = new Coordinate(mCoordinate.getRow(), mCoordinate.getColumn());
+
+        setColumn(getCoordinate().getColumn() + d.getX());
+        setRow(getCoordinate().getRow() + d.getY());
+
+        return true;
+    }
+
+    public Rect generateRect(int tileSize, float gameboardTop, float gameboardLeft) {
+        int offsetTop = (int) Math.floor(gameboardTop);
+        int offsetLeft = (int) Math.floor(gameboardLeft);
+        offsetTop = (getCoordinate().getRow() * tileSize) + offsetTop;
+        offsetLeft = (getCoordinate().getColumn() * tileSize) + offsetLeft;
+        return new Rect(offsetLeft, offsetTop, offsetLeft + tileSize, offsetTop + tileSize);
+    }
+
+    public BoardTileView getView(Context context, int tileSize, float gameboardTop, float gameboardLeft) {
+        int offsetTop = (int) Math.floor(gameboardTop);
+        int offsetLeft = (int) Math.floor(gameboardLeft);
+        offsetTop = (getCoordinate().getRow() * tileSize) + offsetTop;
+        offsetLeft = (getCoordinate().getColumn() * tileSize) + offsetLeft;
+
+        BoardTileView tileView = new BoardTileView(context, this);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize * mWidth, tileSize * mHeight);
+        layoutParams.leftMargin = offsetLeft;
+        layoutParams.topMargin = offsetTop;
+        tileView.setLayoutParams(layoutParams);
+
+        return tileView;
+    }
+
+    @Override
+    public String toString() {
+        return "[R: "+ getCoordinate().getRow() +" C:"+ getCoordinate().getColumn() +" H:"+ mHeight +" W:"+ mWidth +"]";
+    }
+    
 }
