@@ -6,5 +6,12 @@
     <string name="back">Back to last position</string>
     <string name="restart">Restart game</string>
 
+    <string name="game_finished_title">Hurray! You finished the game.</string>
+    <string name="game_finished">It took you %d steps.</string>
+    <string name="close">Close</string>
+
+    <string name="sure_title">Are you sure?</string>
+    <string name="sure">Using this option will reset your game. You\'ll have to restart.</string>
+
     <string name="action_settings">Settings</string>
 </resources>

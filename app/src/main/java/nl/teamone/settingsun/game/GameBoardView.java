@@ -12,14 +12,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.teamone.settingsun.R;
 import nl.teamone.settingsun.utils.PixelUtils;
-import nl.teamone.settingsun.utils.ScoreListener;
 
 public class GameBoardView extends RelativeLayout implements View.OnTouchListener {
 
@@ -39,7 +36,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private Axis mMovingOnAxis;
     private PointF mStartOffsets, mLastDragPoint;
     private Block mFinishBlock;
-    private List<ScoreListener> mScoreListeners;
+    private List<BoardListener> mBoardListeners;
 
     public GameBoardView(Context context) {
         super(context);
@@ -69,11 +66,11 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private void init(Context context) {
         mField = new Field();
         mFinishBlock = mField.resetPositions();
-        mScoreListeners = new ArrayList<>();
+        mBoardListeners = new ArrayList<>();
     }
 
-    public void addListener(ScoreListener l) {
-        mScoreListeners.add(l);
+    public void addListener(BoardListener l) {
+        mBoardListeners.add(l);
     }
 
     @Override
@@ -114,8 +111,8 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
                     block.nextCoordinate(new Coordinate(row, column));
                     mField.didMove(block);
 
-                    for(ScoreListener l : mScoreListeners) {
-                        l.updateMoves(mField.getMoveCount());
+                    for(BoardListener l : mBoardListeners) {
+                        l.madeMove(mField.getMoveCount());
                     }
 
                     if (FINISH_COORDINATE.matches(mFinishBlock.getCoordinate())) {
@@ -263,14 +260,13 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     }
 
     private void finishGame() {
-        for (ScoreListener l : mScoreListeners) {
-            l.updateHighScore(mField.getMoveCount());
+        for (BoardListener l : mBoardListeners) {
+            l.gameFinished(mField.getMoveCount());
         }
         mTiles.clear();
-        //TODO: Add a way to tell the user the game is over.
     }
 
-    public int undoMove() {
+    public void undoMove() {
         if (mField.getMoveCount() > 0) {
             Block b = mField.popLastMove();
             if (b != null) {
@@ -281,13 +277,26 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
                 b.setCoordinate(coordinate);
             }
         }
-        return mField.getMoveCount();
+
+        for(BoardListener listener : mBoardListeners) {
+            listener.undidMove(mField.getMoveCount());
+        }
     }
 
-    public int resetBoard() {
+    public void resetBoard() {
         mFinishBlock = mField.resetPositions();
         fillTiles();
-        return mField.getMoveCount();
+
+        for(BoardListener listener : mBoardListeners) {
+            listener.boardReset();
+        }
+    }
+
+    public interface BoardListener {
+        public void gameFinished(int i);
+        public void madeMove(int i);
+        public void undidMove(int i);
+        public void boardReset();
     }
 
 }
