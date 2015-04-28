@@ -4,7 +4,6 @@ package nl.teamone.settingsun.game;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -25,7 +24,7 @@ import nl.teamone.settingsun.utils.ScoreListener;
 public class GameBoardView extends RelativeLayout implements View.OnTouchListener {
 
     private static final int GRID_WIDTH = 4, GRID_HEIGHT = 5;
-    private static final Coordinate FINISHCOORDINATE = new Coordinate(3,1);
+    private static final Coordinate FINISH_COORDINATE = new Coordinate(3, 1);
 
     public enum Axis {
         X, Y
@@ -39,8 +38,8 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private BoardTileView mMovedTile;
     private Axis mMovingOnAxis;
     private PointF mStartOffsets, mLastDragPoint;
-    private Block finishBlock;
-    private List<ScoreListener> scoreListeners;
+    private Block mFinishBlock;
+    private List<ScoreListener> mScoreListeners;
 
     public GameBoardView(Context context) {
         super(context);
@@ -69,12 +68,12 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
      */
     private void init(Context context) {
         mField = new Field();
-        finishBlock = mField.resetPositions();
-        scoreListeners = new ArrayList<>();
+        mFinishBlock = mField.resetPositions();
+        mScoreListeners = new ArrayList<>();
     }
 
     public void addListener(ScoreListener l) {
-        scoreListeners.add(l);
+        mScoreListeners.add(l);
     }
 
     @Override
@@ -89,8 +88,6 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
 
     public boolean onTouch(View v, MotionEvent event) {
         BoardTileView touchedTile = (BoardTileView) v;
-        View parent = (View)((View)v.getParent()).getParent();
-        TextView score = (TextView) parent.findViewById(R.id.textScore);
         if (touchedTile.isEmpty()) {
             return false;
         } else {
@@ -109,13 +106,21 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
                 // if drag was over 50% or it's click, do the move
                 boolean moved = checkMove();
 
-                if(moved) {
-                    mField.doMove(touchedTile.getBlock());
-                    for(ScoreListener l : scoreListeners) {
+                if(moved && mMovedTile != null) {
+                    int row = (int) (mMovedTile.getY() / mTileSize);
+                    int column = (int) (mMovedTile.getX() / mTileSize);
+
+                    Block block = mMovedTile.getBlock();
+                    block.nextCoordinate(new Coordinate(row, column));
+                    mField.didMove(block);
+
+                    for(ScoreListener l : mScoreListeners) {
                         l.updateMoves(mField.getMoveCount());
                     }
-                    if (FINISHCOORDINATE.matches(finishBlock.getCoordinate()))
+
+                    if (FINISH_COORDINATE.matches(mFinishBlock.getCoordinate())) {
                         finishGame();
+                    }
                 }
 
                 mLastDragPoint = null;
@@ -140,10 +145,6 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
         }
         int gameboardHeight = mTileSize * GRID_HEIGHT;
         int gameboardWidth = mTileSize * GRID_WIDTH;
-
-        // Offset to center in view
-        int offsetTop = viewHeight / 2 - gameboardHeight / 2;
-        int offsetLeft = viewWidth / 2 - gameboardWidth / 2;
 
         // Create rectangle
         mGameBoardRect = new RectF(0, 0, gameboardWidth, gameboardHeight);
@@ -171,32 +172,37 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     }
 
     private boolean checkMove() {
-        if(mMovingOnAxis == Axis.X) {
-            double mod = mMovedTile.getX() % mTileSize;
-            float left = (float) (mMovedTile.getX() - mod) + mGameBoardRect.left;
-            if(mod < mTileSize / 2) {
-                mMovedTile.setX(left);
-            } else {
-                mMovedTile.setX(left + mTileSize);
-            }
+        if(mMovedTile != null) {
+            if (mMovingOnAxis == Axis.X) {
+                double mod = mMovedTile.getX() % mTileSize;
+                float left = (float) (mMovedTile.getX() - mod) + mGameBoardRect.left;
+                if (mod < mTileSize / 2) {
+                    mMovedTile.setX(left);
+                } else {
+                    mMovedTile.setX(left + mTileSize);
+                }
 
-            return mMovedTile.getX() != mStartOffsets.x;
-        } else {
-            double mod = mMovedTile.getY() % mTileSize;
-            float top = (float) (mMovedTile.getY() - mod) + mGameBoardRect.top;
-            if(mod < mTileSize / 2) {
-                mMovedTile.setY(top);
+                return mMovedTile.getX() != mStartOffsets.x;
             } else {
-                mMovedTile.setY(top + mTileSize);
-            }
+                double mod = mMovedTile.getY() % mTileSize;
+                float top = (float) (mMovedTile.getY() - mod) + mGameBoardRect.top;
+                if (mod < mTileSize / 2) {
+                    mMovedTile.setY(top);
+                } else {
+                    mMovedTile.setY(top + mTileSize);
+                }
 
-            return mMovedTile.getY() != mStartOffsets.y;
+                return mMovedTile.getY() != mStartOffsets.y;
+            }
         }
+        return false;
     }
 
     private void followFinger(MotionEvent event) {
         float dxEvent = event.getRawX() - mLastDragPoint.x;
         float dyEvent = event.getRawY() - mLastDragPoint.y;
+
+        if(mMovedTile == null) return;
 
         Pair<Float, Float> xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
         // detect if this move is valid
@@ -256,12 +262,8 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
         return false;
     }
 
-    private void undo(Block b) {
-        //TODO: Undo a block's last move.
-    }
-
     private void finishGame() {
-        for (ScoreListener l : scoreListeners) {
+        for (ScoreListener l : mScoreListeners) {
             l.updateHighScore(mField.getMoveCount());
         }
         mTiles.clear();
@@ -270,13 +272,18 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
 
     public int undoMove() {
         Block b = mField.undoMove();
-        if (b != null)
-            undo(b);
+        if (b != null) {
+            Coordinate coordinate = b.getPrevCoordinate();
+            BoardTileView view = b.getView(getContext(), mTileSize, mGameBoardRect.top, mGameBoardRect.left);
+            view.setX(mTileSize * coordinate.getColumn());
+            view.setY(mTileSize * coordinate.getRow());
+            b.setCoordinate(coordinate);
+        }
         return mField.getMoveCount();
     }
 
     public int resetBoard() {
-        finishBlock = mField.resetPositions();
+        mFinishBlock = mField.resetPositions();
         fillTiles();
         return mField.getMoveCount();
     }
