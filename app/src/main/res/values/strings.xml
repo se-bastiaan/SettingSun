@@ -2,7 +2,7 @@
     <string name="app_name">Setting Sun</string>
 
     <string name="score">Moves</string>
-    <string name="highscore">High score</string>
+    <string name="highscore">Best Score</string>
     <string name="back">Back to last position</string>
     <string name="restart">Restart game</string>
 

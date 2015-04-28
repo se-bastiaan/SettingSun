@@ -39,7 +39,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private Axis mMovingOnAxis;
     private PointF mStartOffsets, mLastDragPoint;
     private Block finishBlock;
-    private List<ScoreListener> scoreListeners;
+    private List<ScoreListener> scoreListeners = new ArrayList<>();
 
     public GameBoardView(Context context) {
         super(context);
@@ -69,7 +69,6 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private void init(Context context) {
         mField = new Field();
         finishBlock = mField.resetPositions();
-        scoreListeners = new ArrayList<>();
     }
 
     public void addListener(ScoreListener l) {
