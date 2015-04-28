@@ -78,12 +78,15 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
 
     public boolean onTouch(View v, MotionEvent event) {
         BoardTileView touchedTile = (BoardTileView) v;
+        View parent = (View)((View)v.getParent()).getParent();
+        TextView score = (TextView) parent.findViewById(R.id.textScore);
         if (touchedTile.isEmpty()) {
             return false;
         } else {
             if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 // start of the gesture
                 mMovedTile = touchedTile;
+                mLastDragPoint = new PointF(event.getRawX(), event.getRawY());
             } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
                 // during the gesture
                 if (mLastDragPoint != null) {
@@ -96,10 +99,6 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
                 if (lastDragMovedAtLeastHalfWay() || isClick()) {
                     animateTilesToEmptySpace();
                     mField.doMove(touchedTile.getBlock());
-
-                    View parent = (View)((View)v.getParent()).getParent();
-                    TextView score = (TextView) parent.findViewById(R.id.textScore);
-                    System.out.println(score);
                     score.setText(Integer.toString(mField.getMoveCount()));
 
 
@@ -141,6 +140,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
      */
     public void fillTiles() {
         removeAllViews();
+        mTiles.clear();
 
         for(Block block : mField.getBlocks()) {
             BoardTileView boardTileView = block.getView(getContext(), mTileSize, mGameBoardRect.top, mGameBoardRect.left);
@@ -274,6 +274,17 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
             }
         }
         return false;
+    }
+
+    public int undoMove() {
+        mField.undoMove();
+        return mField.getMoveCount();
+    }
+
+    public int resetBoard() {
+        mField.resetPositions();
+        fillTiles();
+        return mField.getMoveCount();
     }
 
 }

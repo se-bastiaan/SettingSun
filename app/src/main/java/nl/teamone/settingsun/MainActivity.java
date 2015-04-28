@@ -6,10 +6,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import nl.teamone.settingsun.game.GameBoardView;
+
 
 public class MainActivity extends AppCompatActivity {
 
     TextView mScoreText, mHighScoreText;
+    GameBoardView mGameBoardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         mScoreText = (TextView) findViewById(R.id.textScore);
         mHighScoreText = (TextView) findViewById(R.id.textHighScore);
+        mGameBoardView = (GameBoardView) findViewById(R.id.GameBoardView);
     }
 
 
@@ -35,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == R.id.action_back)
+            mScoreText.setText(Integer.toString(mGameBoardView.undoMove()));
+
+        if (id == R.id.action_reset)
+            mScoreText.setText(Integer.toString(mGameBoardView.resetBoard()));
 
         return super.onOptionsItemSelected(item);
     }
