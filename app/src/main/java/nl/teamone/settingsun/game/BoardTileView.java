@@ -4,18 +4,22 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.util.List;
+
+import nl.teamone.settingsun.R;
 
 public class BoardTileView extends ImageView {
 
 	private Block mBlock;
 	private boolean mEmpty;
 
-	public BoardTileView(Context context, Block block) {
+	public BoardTileView(Context context, Block block,  RelativeLayout.LayoutParams layoutParams, int backgroundRes) {
 		super(context);
         mBlock = block;
-        setBackgroundColor(Color.argb(255, (int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256)));
+        setLayoutParams(layoutParams);
+        setBackgroundDrawable(getResources().getDrawable(backgroundRes).mutate());
 	}
 
 	public boolean isEmpty() {

@@ -2,9 +2,9 @@ package nl.teamone.settingsun.game;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.SparseArray;
 import android.widget.RelativeLayout;
 
-import java.util.Stack;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +18,19 @@ public class Block {
     private Coordinate mCoordinate;
     private int mWidth;
     private int mHeight;
-    private Stack<Coordinate> mPrevCoordinate;
+    private int mBackgroundResource;
+    private Coordinate mPrevCoordinate;
 
     private List<Integer> mUsedRows;
     private List<Integer> mUsedColumns;
 
-    public Block(int row, int column, int width, int height) {
+    public Block(int row, int column, int width, int height, int resId) {
         mUsedRows = new ArrayList<>(height);
         mUsedColumns = new ArrayList<>(width);
 
         mWidth = width;
         mHeight = height;
+        mBackgroundResource = resId;
 
         mCoordinate = new Coordinate(row, column);
         setRow(row);
@@ -93,21 +95,16 @@ public class Block {
     }
 
     public Coordinate getPrevCoordinate() {
-        return mPrevCoordinate.peek();
+        return mPrevCoordinate;
     }
 
     public boolean move(Direction d) {
-        mPrevCoordinate.push(new Coordinate(mCoordinate.getRow(), mCoordinate.getColumn()));
-
+        mPrevCoordinate = new Coordinate(mCoordinate.getRow(), mCoordinate.getColumn());
 
         setColumn(getCoordinate().getColumn() + d.getX());
         setRow(getCoordinate().getRow() + d.getY());
 
         return true;
-    }
-
-    public void undo() {
-        //TODO: Pop the previous coordinate off the stack and apply it.
     }
 
     public Rect generateRect(int tileSize, float gameboardTop, float gameboardLeft) {
@@ -124,13 +121,11 @@ public class Block {
         offsetTop = (getCoordinate().getRow() * tileSize) + offsetTop;
         offsetLeft = (getCoordinate().getColumn() * tileSize) + offsetLeft;
 
-        BoardTileView tileView = new BoardTileView(context, this);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize * mWidth, tileSize * mHeight);
         layoutParams.leftMargin = offsetLeft;
         layoutParams.topMargin = offsetTop;
-        tileView.setLayoutParams(layoutParams);
 
-        return tileView;
+        return new BoardTileView(context, this, layoutParams, mBackgroundResource);
     }
 
     @Override

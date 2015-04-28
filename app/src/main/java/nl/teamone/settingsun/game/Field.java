@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import nl.teamone.settingsun.R;
+
 public class Field {
 
     // A list of blocks. The blocks keep their own position, this isn't decided by the Field class
@@ -27,21 +29,21 @@ public class Field {
         // Also make an empty movelist.
         moves = new Stack<>();
         // The two vertical blocks top left and right.
-        blockList.add(new Block(0, 0, 1, 2));
-        blockList.add(new Block(0, 3, 1, 2));
+        blockList.add(new Block(0, 0, 1, 2, R.drawable.block_background_red));
+        blockList.add(new Block(0, 3, 1, 2, R.drawable.block_background_red));
         // The big block in the top center.
-        Block finishBlock = new Block(0, 1, 2, 2);
+        Block finishBlock = new Block(0, 1, 2, 2, R.drawable.block_background_yellow);
         blockList.add(finishBlock);
         // The horizontal block in the center.
-        blockList.add(new Block(2, 1, 2, 1));
+        blockList.add(new Block(2, 1, 2, 1, R.drawable.block_background_red));
         // The two vertical blocks bottom left and right.
-        blockList.add(new Block(3, 0, 1, 2));
-        blockList.add(new Block(3, 3, 1, 2));
+        blockList.add(new Block(3, 0, 1, 2, R.drawable.block_background_red));
+        blockList.add(new Block(3, 3, 1, 2, R.drawable.block_background_red));
         // And finally the four single blocks down the bottom.
-        blockList.add(new Block(3, 1, 1, 1));
-        blockList.add(new Block(4, 1, 1, 1));
-        blockList.add(new Block(3, 2, 1, 1));
-        blockList.add(new Block(4, 2, 1, 1));
+        blockList.add(new Block(3, 1, 1, 1, R.drawable.block_background_blue));
+        blockList.add(new Block(4, 1, 1, 1, R.drawable.block_background_blue));
+        blockList.add(new Block(3, 2, 1, 1, R.drawable.block_background_blue));
+        blockList.add(new Block(4, 2, 1, 1, R.drawable.block_background_blue));
         return finishBlock;
     }
 

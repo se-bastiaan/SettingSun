@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.teamone.settingsun.R;
+import nl.teamone.settingsun.utils.PixelUtils;
 import nl.teamone.settingsun.utils.ScoreListener;
 
 public class GameBoardView extends RelativeLayout implements View.OnTouchListener {
@@ -144,7 +146,13 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
         int offsetLeft = viewWidth / 2 - gameboardWidth / 2;
 
         // Create rectangle
-        mGameBoardRect = new RectF(offsetLeft, offsetTop, offsetLeft + gameboardWidth, offsetTop + gameboardHeight);
+        mGameBoardRect = new RectF(0, 0, gameboardWidth, gameboardHeight);
+
+        setLayoutParams(new RelativeLayout.LayoutParams(gameboardWidth, gameboardHeight));
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(gameboardWidth + PixelUtils.getPixelsFromDp(getContext(), 16), gameboardHeight + PixelUtils.getPixelsFromDp(getContext(), 16));
+        layoutParams.leftMargin = (((View)getParent()).getWidth() - gameboardWidth - PixelUtils.getPixelsFromDp(getContext(), 16)) / 2;
+        ((View)getParent()).setLayoutParams(layoutParams);
     }
 
     /**
