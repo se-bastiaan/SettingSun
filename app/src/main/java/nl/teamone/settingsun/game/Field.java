@@ -16,11 +16,12 @@ public class Field {
 
     // Create a new field in the starting position.
     public Field() {
-        resetPositions();
+        blockList = new ArrayList<>();
+        moves = new Stack<>();
     }
 
     // We should call this method when we press the reset button.
-    public void resetPositions() {
+    public Block resetPositions() {
         // We create an empty blocklist, and fill it with the game blocks a few lines down.
         blockList = new ArrayList<>();
         // Also make an empty movelist.
@@ -29,7 +30,8 @@ public class Field {
         blockList.add(new Block(0, 0, 1, 2));
         blockList.add(new Block(0, 3, 1, 2));
         // The big block in the top center.
-        blockList.add(new Block(0, 1, 2, 2));
+        Block finishBlock = new Block(0, 1, 2, 2);
+        blockList.add(finishBlock);
         // The horizontal block in the center.
         blockList.add(new Block(2, 1, 2, 1));
         // The two vertical blocks bottom left and right.
@@ -40,6 +42,7 @@ public class Field {
         blockList.add(new Block(4, 1, 1, 1));
         blockList.add(new Block(3, 2, 1, 1));
         blockList.add(new Block(4, 2, 1, 1));
+        return finishBlock;
     }
 
     // We probably need this method to allow for the UI to actually do anything at all.

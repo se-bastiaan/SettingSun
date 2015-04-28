@@ -36,6 +36,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private BoardTileView mMovedTile;
     private Axis mMovingOnAxis;
     private PointF mStartOffsets, mLastDragPoint;
+    private Block finishBlock;
 
     public GameBoardView(Context context) {
         super(context);
@@ -64,6 +65,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
      */
     private void init(Context context) {
         mField = new Field();
+        finishBlock = mField.resetPositions();
     }
 
     @Override
@@ -241,7 +243,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     }
 
     public int resetBoard() {
-        mField.resetPositions();
+        finishBlock = mField.resetPositions();
         fillTiles();
         return mField.getMoveCount();
     }
