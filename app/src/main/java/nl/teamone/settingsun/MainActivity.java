@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements GameBoardView.Boa
     private TextView mScoreText, mHighScoreText;
     private GameBoardView mGameBoardView;
     private int mCurrentHighScore;
+    boolean mIsFirstRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,22 @@ public class MainActivity extends AppCompatActivity implements GameBoardView.Boa
         setContentView(R.layout.activity_main);
 
         mCurrentHighScore = PrefUtils.get(this, "highscore", 0);
+        mIsFirstRun = PrefUtils.get(this, "isfirstrun", true);
+
+        if (mIsFirstRun) {
+            AlertDialog greeting = new AlertDialog.Builder(MainActivity.this).create();
+            greeting.setTitle(getString(R.string.greetingTitle));
+            greeting.setMessage(getString(R.string.greetingText));
+            greeting.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.greetingDismiss), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            greeting.show();
+
+            mIsFirstRun = false;
+            PrefUtils.save(this, "isfirstrun", mIsFirstRun);
+        }
 
         mScoreText = (TextView) findViewById(R.id.textScore);
         mHighScoreText = (TextView) findViewById(R.id.textHighScore);
