@@ -36,6 +36,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private BoardTileView mMovedTile;
     private Axis mMovingOnAxis;
     private PointF mStartOffsets, mLastDragPoint;
+    private Block finishBlock;
 
     public GameBoardView(Context context) {
         super(context);
@@ -64,6 +65,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
      */
     private void init(Context context) {
         mField = new Field();
+        finishBlock = mField.resetPositions();
     }
 
     @Override
@@ -78,6 +80,8 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
 
     public boolean onTouch(View v, MotionEvent event) {
         BoardTileView touchedTile = (BoardTileView) v;
+        View parent = (View)((View)v.getParent()).getParent();
+        TextView score = (TextView) parent.findViewById(R.id.textScore);
         if (touchedTile.isEmpty()) {
             return false;
         } else {
@@ -98,9 +102,6 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
 
                 if(moved) {
                     mField.doMove(touchedTile.getBlock());
-                    View parent = (View)(v.getParent()).getParent();
-                    TextView score = (TextView) parent.findViewById(R.id.textScore);
-                    System.out.println(score);
                     score.setText(Integer.toString(mField.getMoveCount()));
                 }
 
@@ -140,6 +141,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
      */
     public void fillTiles() {
         removeAllViews();
+        mTiles.clear();
 
         for(Block block : mField.getBlocks()) {
             BoardTileView boardTileView = block.getView(getContext(), mTileSize, mGameBoardRect.top, mGameBoardRect.left);
@@ -177,21 +179,19 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
         float dxEvent = event.getRawX() - mLastDragPoint.x;
         float dyEvent = event.getRawY() - mLastDragPoint.y;
 
-        if (mMovedTile != null) {
-            Pair<Float, Float> xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
-            // detect if this move is valid
-            RectF candidateRect = new RectF(xy.first, xy.second, xy.first + mMovedTile.getWidth(), xy.second + mMovedTile.getHeight());
+        Pair<Float, Float> xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
+        // detect if this move is valid
+        RectF candidateRect = new RectF(xy.first, xy.second, xy.first + mMovedTile.getWidth(), xy.second + mMovedTile.getHeight());
 
-            boolean candidateRectInGameboard = (mGameBoardRect.contains(candidateRect));
-            boolean collides = collidesWithTiles(candidateRect, mMovedTile);
+        boolean candidateRectInGameboard = (mGameBoardRect.contains(candidateRect));
+        boolean collides = collidesWithTiles(candidateRect, mMovedTile);
 
-            boolean impossibleMove = (!candidateRectInGameboard || collides);
+        boolean impossibleMove = (!candidateRectInGameboard || collides);
 
-            if (!impossibleMove) {
-                xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
-                mMovedTile.setX(xy.first);
-                mMovedTile.setY(xy.second);
-            }
+        if (!impossibleMove) {
+            xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
+            mMovedTile.setX(xy.first);
+            mMovedTile.setY(xy.second);
         }
     }
 
@@ -235,6 +235,23 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
             }
         }
         return false;
+    }
+
+    private void undo(Block b) {
+        //TODO Undo a block's last move.
+    }
+
+    public int undoMove() {
+        Block b = mField.undoMove();
+        if (b != null)
+            undo(b);
+        return mField.getMoveCount();
+    }
+
+    public int resetBoard() {
+        finishBlock = mField.resetPositions();
+        fillTiles();
+        return mField.getMoveCount();
     }
 
 }
