@@ -271,13 +271,15 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     }
 
     public int undoMove() {
-        Block b = mField.undoMove();
-        if (b != null) {
-            Coordinate coordinate = b.getPrevCoordinate();
-            BoardTileView view = b.getView(getContext(), mTileSize, mGameBoardRect.top, mGameBoardRect.left);
-            view.setX(mTileSize * coordinate.getColumn());
-            view.setY(mTileSize * coordinate.getRow());
-            b.setCoordinate(coordinate);
+        if (mField.getMoveCount() > 0) {
+            Block b = mField.popLastMove();
+            if (b != null) {
+                Coordinate coordinate = b.getPrevCoordinate();
+                BoardTileView view = b.getView(getContext(), mTileSize, mGameBoardRect.top, mGameBoardRect.left);
+                view.setX(mTileSize * coordinate.getColumn());
+                view.setY(mTileSize * coordinate.getRow());
+                b.setCoordinate(coordinate);
+            }
         }
         return mField.getMoveCount();
     }

@@ -30,7 +30,10 @@ public class MainActivity extends AppCompatActivity implements ScoreListener {
         mScoreText = (TextView) findViewById(R.id.textScore);
         mHighScoreText = (TextView) findViewById(R.id.textHighScore);
 
-        mHighScoreText.setText(Integer.toString(mCurrentHighScore));
+        if (mCurrentHighScore > 0)
+            mHighScoreText.setText(Integer.toString(mCurrentHighScore));
+        else
+            mHighScoreText.setText(""); // No High Score yet!
 
         mGameBoardView = (GameBoardView) findViewById(R.id.GameBoardView);
         mGameBoardView.addListener(this);

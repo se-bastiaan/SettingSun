@@ -59,7 +59,7 @@ public class Field {
     }
 
     // This method should be called when we press the 'back' button.
-    public Block undoMove() {
+    public Block popLastMove() {
         // Undo the move that's on the top of the stack.
         // Unless we haven't done any moves, in which case we just do nothing.
         if (moves.size() > 0) {
