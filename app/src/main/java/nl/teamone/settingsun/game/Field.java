@@ -69,7 +69,7 @@ public class Field {
             return null;
     }
 
-    public void doMove(Block b) {
+    public void didMove(Block b) {
         moves.push(b);
     }
 

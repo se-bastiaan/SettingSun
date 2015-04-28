@@ -1,102 +1,116 @@
 package nl.teamone.settingsun;
 
-import android.app.AlertDialog;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import nl.teamone.settingsun.game.GameBoardView;
-import nl.teamone.settingsun.utils.ScoreListener;
+import nl.teamone.settingsun.utils.PrefUtils;
 
+public class MainActivity extends AppCompatActivity implements GameBoardView.BoardListener {
 
-public class MainActivity extends AppCompatActivity implements ScoreListener {
-
-    TextView mScoreText, mHighScoreText;
-    GameBoardView mGameBoardView;
-    SharedPreferences mPrefs;
-    int mCurrentHighScore;
-    boolean isFirstRun;
+    private TextView mScoreText, mHighScoreText;
+    private GameBoardView mGameBoardView;
+    private int mCurrentHighScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPrefs = getSharedPreferences("TeamOne.SettingSunApp", Context.MODE_PRIVATE);
-        mCurrentHighScore = mPrefs.getInt("highScore", 0);
-        isFirstRun = mPrefs.getBoolean("isFirstRun", true);
-
-        if (isFirstRun) {
-            AlertDialog greeting = new AlertDialog.Builder(MainActivity.this).create();
-            greeting.setTitle(getString(R.string.greetingTitle));
-            greeting.setMessage(getString(R.string.greetingText));
-            greeting.setButton(getString(R.string.greetingDismiss), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            greeting.show();
-
-            isFirstRun = false;
-            SharedPreferences.Editor e = mPrefs.edit();
-            e.putBoolean("isFirstRun", isFirstRun);
-            e.commit();
-        }
+        mCurrentHighScore = PrefUtils.get(this, "highscore", 0);
 
         mScoreText = (TextView) findViewById(R.id.textScore);
         mHighScoreText = (TextView) findViewById(R.id.textHighScore);
 
-        if (mCurrentHighScore > 0)
+        if (mCurrentHighScore > 0) {
             mHighScoreText.setText(Integer.toString(mCurrentHighScore));
-        else
-            mHighScoreText.setText(""); // No High Score yet!
+        } else {
+            mHighScoreText.setText("-"); // No High Score yet!
+        }
 
         mGameBoardView = (GameBoardView) findViewById(R.id.GameBoardView);
         mGameBoardView.addListener(this);
 
     }
 
-    public void updateHighScore (int newScore) {
+    public void gameFinished(int newScore) {
         if (mCurrentHighScore > newScore || mCurrentHighScore == 0) {
-            SharedPreferences.Editor e = mPrefs.edit();
-            e.putInt("highScore", newScore);
-            e.commit();
+            PrefUtils.save(this, "highscore", newScore);
             mCurrentHighScore = newScore;
             mHighScoreText.setText(Integer.toString(newScore));
         }
+
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.game_finished_title)
+            .setMessage(String.format(getString(R.string.game_finished), newScore))
+            .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            })
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    mGameBoardView.resetBoard();
+                }
+            })
+            .create().show();
     }
 
-    public void updateMoves (int score) {
+    public void madeMove(int score) {
         mScoreText.setText(Integer.toString(score));
     }
 
+    public void undidMove(int score) {
+        mScoreText.setText(Integer.toString(score));
+    }
+
+    @Override
+    public void boardReset() {
+        mScoreText.setText("0");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_back)
-            mScoreText.setText(Integer.toString(mGameBoardView.undoMove()));
-
-        if (id == R.id.action_reset)
-            mScoreText.setText(Integer.toString(mGameBoardView.resetBoard()));
-
-        return super.onOptionsItemSelected(item);
+        switch(item.getItemId()) {
+            case R.id.action_back:
+                mGameBoardView.undoMove();
+                return true;
+            case R.id.action_reset:
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.sure_title)
+                        .setMessage(R.string.sure)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mGameBoardView.resetBoard();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .create().show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

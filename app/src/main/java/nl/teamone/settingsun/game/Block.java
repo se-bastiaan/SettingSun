@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Represents a block in a matrix-like board with columns and rows.
@@ -16,10 +17,11 @@ import java.util.List;
 public class Block {
 
     private Coordinate mCoordinate;
+    private Stack<Coordinate> mPrevCoordinates = new Stack<>();
     private int mWidth;
     private int mHeight;
     private int mBackgroundResource;
-    private Coordinate mPrevCoordinate;
+    private BoardTileView mView;
 
     private List<Integer> mUsedRows;
     private List<Integer> mUsedColumns;
@@ -95,16 +97,14 @@ public class Block {
     }
 
     public Coordinate getPrevCoordinate() {
-        return mPrevCoordinate;
+        return mPrevCoordinates.pop();
     }
 
-    public boolean move(Direction d) {
-        mPrevCoordinate = new Coordinate(mCoordinate.getRow(), mCoordinate.getColumn());
+    public void nextCoordinate(Coordinate c) {
+        mPrevCoordinates.add(mCoordinate);
+        mCoordinate = c;
 
-        setColumn(getCoordinate().getColumn() + d.getX());
-        setRow(getCoordinate().getRow() + d.getY());
-
-        return true;
+        setCoordinate(mCoordinate);
     }
 
     public Rect generateRect(int tileSize, float gameboardTop, float gameboardLeft) {
@@ -116,16 +116,19 @@ public class Block {
     }
 
     public BoardTileView getView(Context context, int tileSize, float gameboardTop, float gameboardLeft) {
-        int offsetTop = (int) Math.floor(gameboardTop);
-        int offsetLeft = (int) Math.floor(gameboardLeft);
-        offsetTop = (getCoordinate().getRow() * tileSize) + offsetTop;
-        offsetLeft = (getCoordinate().getColumn() * tileSize) + offsetLeft;
+        if(mView == null) {
+            int offsetTop = (int) Math.floor(gameboardTop);
+            int offsetLeft = (int) Math.floor(gameboardLeft);
+            offsetTop = (getCoordinate().getRow() * tileSize) + offsetTop;
+            offsetLeft = (getCoordinate().getColumn() * tileSize) + offsetLeft;
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize * mWidth, tileSize * mHeight);
-        layoutParams.leftMargin = offsetLeft;
-        layoutParams.topMargin = offsetTop;
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize * mWidth, tileSize * mHeight);
+            layoutParams.leftMargin = offsetLeft;
+            layoutParams.topMargin = offsetTop;
 
-        return new BoardTileView(context, this, layoutParams, mBackgroundResource);
+            mView = new BoardTileView(context, this, layoutParams, mBackgroundResource);
+        }
+        return mView;
     }
 
     @Override
