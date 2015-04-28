@@ -249,7 +249,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     }
 
     private void undo(Block b) {
-        //TODO Undo a block's last move.
+        //TODO: Undo a block's last move.
     }
 
     private void finishGame() {
@@ -257,6 +257,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
             l.updateHighScore(mField.getMoveCount());
         }
         mTiles.clear();
+        //TODO: Add a way to tell the user the game is over.
     }
 
     public int undoMove() {
