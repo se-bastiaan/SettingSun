@@ -98,7 +98,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
 
                 if(moved) {
                     mField.doMove(touchedTile.getBlock());
-                    View parent = (View)((View)v.getParent()).getParent();
+                    View parent = (View)(v.getParent()).getParent();
                     TextView score = (TextView) parent.findViewById(R.id.textScore);
                     System.out.println(score);
                     score.setText(Integer.toString(mField.getMoveCount()));
@@ -177,19 +177,21 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
         float dxEvent = event.getRawX() - mLastDragPoint.x;
         float dyEvent = event.getRawY() - mLastDragPoint.y;
 
-        Pair<Float, Float> xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
-        // detect if this move is valid
-        RectF candidateRect = new RectF(xy.first, xy.second, xy.first + mMovedTile.getWidth(), xy.second + mMovedTile.getHeight());
+        if (mMovedTile != null) {
+            Pair<Float, Float> xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
+            // detect if this move is valid
+            RectF candidateRect = new RectF(xy.first, xy.second, xy.first + mMovedTile.getWidth(), xy.second + mMovedTile.getHeight());
 
-        boolean candidateRectInGameboard = (mGameBoardRect.contains(candidateRect));
-        boolean collides = collidesWithTiles(candidateRect, mMovedTile);
+            boolean candidateRectInGameboard = (mGameBoardRect.contains(candidateRect));
+            boolean collides = collidesWithTiles(candidateRect, mMovedTile);
 
-        boolean impossibleMove = (!candidateRectInGameboard || collides);
+            boolean impossibleMove = (!candidateRectInGameboard || collides);
 
-        if (!impossibleMove) {
-            xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
-            mMovedTile.setX(xy.first);
-            mMovedTile.setY(xy.second);
+            if (!impossibleMove) {
+                xy = getXYFromEvent(mMovedTile, dxEvent, dyEvent);
+                mMovedTile.setX(xy.first);
+                mMovedTile.setY(xy.second);
+            }
         }
     }
 
