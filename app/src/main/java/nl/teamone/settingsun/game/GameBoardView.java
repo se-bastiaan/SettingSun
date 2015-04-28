@@ -23,6 +23,7 @@ import nl.teamone.settingsun.R;
 public class GameBoardView extends RelativeLayout implements View.OnTouchListener {
 
     private static final int GRID_WIDTH = 4, GRID_HEIGHT = 5;
+    private static final Coordinate FINISHCOORDINATE = new Coordinate(3,1);
 
     public enum Axis {
         X, Y
@@ -103,6 +104,8 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
                 if(moved) {
                     mField.doMove(touchedTile.getBlock());
                     score.setText(Integer.toString(mField.getMoveCount()));
+                    if (FINISHCOORDINATE.matches(finishBlock.getCoordinate()))
+                        finishGame((TextView) parent.findViewById(R.id.textHighScore));
                 }
 
                 mLastDragPoint = null;
@@ -239,6 +242,12 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
 
     private void undo(Block b) {
         //TODO Undo a block's last move.
+    }
+
+    private void finishGame(TextView t) {
+        //TODO Keep a highscore.
+        t.setText(mField.getMoveCount());
+        mTiles.clear();
     }
 
     public int undoMove() {
