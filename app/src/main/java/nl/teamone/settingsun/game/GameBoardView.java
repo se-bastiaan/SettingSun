@@ -4,7 +4,6 @@ package nl.teamone.settingsun.game;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -12,10 +11,14 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import java.io.Console;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import nl.teamone.settingsun.MainActivity;
+import nl.teamone.settingsun.R;
 
 public class GameBoardView extends RelativeLayout implements View.OnTouchListener {
 
@@ -92,6 +95,14 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
                 // if drag was over 50% or it's click, do the move
                 if (lastDragMovedAtLeastHalfWay() || isClick()) {
                     animateTilesToEmptySpace();
+                    mField.doMove(touchedTile.getBlock());
+
+                    View parent = (View)((View)v.getParent()).getParent();
+                    TextView score = (TextView) parent.findViewById(R.id.textScore);
+                    System.out.println(score);
+                    score.setText(Integer.toString(mField.getMoveCount()));
+
+
                 } else {
                     // TODO: animateTilesBackToOrigin();
                 }
@@ -188,7 +199,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
         // just small amount of MOVE events counts as click
 
         // just very small drag counts as click
-        if (mMovedTile.getAxialDelte() < mTileSize / 20) {
+        if (mMovedTile.getAxialDelta() < mTileSize / 20) {
             return true;
         }
 

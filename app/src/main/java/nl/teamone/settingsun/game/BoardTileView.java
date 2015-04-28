@@ -72,7 +72,7 @@ public class BoardTileView extends ImageView {
         mAxialDelta = d;
     }
 
-    public int getAxialDelte() {
+    public int getAxialDelta() {
         return mAxialDelta;
     }
 

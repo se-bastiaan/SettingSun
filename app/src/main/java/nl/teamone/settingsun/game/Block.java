@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.util.SparseArray;
 import android.widget.RelativeLayout;
 
+import java.util.Stack;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Block {
     private Coordinate mCoordinate;
     private int mWidth;
     private int mHeight;
-    private Coordinate mPrevCoordinate;
+    private Stack<Coordinate> mPrevCoordinate;
 
     private List<Integer> mUsedRows;
     private List<Integer> mUsedColumns;
@@ -93,16 +94,21 @@ public class Block {
     }
 
     public Coordinate getPrevCoordinate() {
-        return mPrevCoordinate;
+        return mPrevCoordinate.peek();
     }
 
     public boolean move(Direction d) {
-        mPrevCoordinate = new Coordinate(mCoordinate.getRow(), mCoordinate.getColumn());
+        mPrevCoordinate.push(new Coordinate(mCoordinate.getRow(), mCoordinate.getColumn()));
+
 
         setColumn(getCoordinate().getColumn() + d.getX());
         setRow(getCoordinate().getRow() + d.getY());
 
         return true;
+    }
+
+    public void undo() {
+        //TODO: Pop the previous coordinate off the stack and apply it.
     }
 
     public Rect generateRect(int tileSize, float gameboardTop, float gameboardLeft) {
