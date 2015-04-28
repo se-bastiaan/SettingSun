@@ -237,8 +237,14 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
         return false;
     }
 
+    private void undo(Block b) {
+        //TODO Undo a block's last move.
+    }
+
     public int undoMove() {
-        mField.undoMove();
+        Block b = mField.undoMove();
+        if (b != null)
+            undo(b);
         return mField.getMoveCount();
     }
 
