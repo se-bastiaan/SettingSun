@@ -11,7 +11,6 @@ public class BoardTileView extends ImageView {
 
 	private Block mBlock;
 	private boolean mEmpty;
-    private int mAxialDelta;
 
 	public BoardTileView(Context context, Block block) {
 		super(context);
@@ -66,14 +65,6 @@ public class BoardTileView extends ImageView {
 
     public Block getBlock() {
         return mBlock;
-    }
-
-    public void setAxialDelta(int d) {
-        mAxialDelta = d;
-    }
-
-    public int getAxialDelta() {
-        return mAxialDelta;
     }
 
 }
