@@ -6,5 +6,9 @@
     <string name="back">Back to last position</string>
     <string name="restart">Restart game</string>
 
+    <string name="greetingTitle">The Setting Sun Puzzle</string>
+    <string name="greetingText">Welcome to the Setting Sun Puzzle. Your goal is to slide the big yellow block down to the bottom, but the other blocks are in the way!</string>
+    <string name="greetingDismiss">Good luck!</string>
+
     <string name="action_settings">Settings</string>
 </resources>

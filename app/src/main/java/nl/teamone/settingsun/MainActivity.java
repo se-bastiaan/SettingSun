@@ -1,6 +1,8 @@
 package nl.teamone.settingsun;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements ScoreListener {
     GameBoardView mGameBoardView;
     SharedPreferences mPrefs;
     int mCurrentHighScore;
+    boolean isFirstRun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,24 @@ public class MainActivity extends AppCompatActivity implements ScoreListener {
 
         mPrefs = getSharedPreferences("TeamOne.SettingSunApp", Context.MODE_PRIVATE);
         mCurrentHighScore = mPrefs.getInt("highScore", 0);
+        isFirstRun = mPrefs.getBoolean("isFirstRun", true);
+
+        if (isFirstRun) {
+            AlertDialog greeting = new AlertDialog.Builder(MainActivity.this).create();
+            greeting.setTitle(getString(R.string.greetingTitle));
+            greeting.setMessage(getString(R.string.greetingText));
+            greeting.setButton(getString(R.string.greetingDismiss), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            greeting.show();
+
+            isFirstRun = false;
+            SharedPreferences.Editor e = mPrefs.edit();
+            e.putBoolean("isFirstRun", isFirstRun);
+            e.commit();
+        }
 
         mScoreText = (TextView) findViewById(R.id.textScore);
         mHighScoreText = (TextView) findViewById(R.id.textHighScore);
