@@ -15,10 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import nl.teamone.settingsun.R;
+import nl.teamone.settingsun.utils.ScoreListener;
 
 public class GameBoardView extends RelativeLayout implements View.OnTouchListener {
 
@@ -38,6 +38,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private Axis mMovingOnAxis;
     private PointF mStartOffsets, mLastDragPoint;
     private Block finishBlock;
+    private List<ScoreListener> scoreListeners;
 
     public GameBoardView(Context context) {
         super(context);
@@ -67,6 +68,11 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private void init(Context context) {
         mField = new Field();
         finishBlock = mField.resetPositions();
+        scoreListeners = new ArrayList<>();
+    }
+
+    public void addListener(ScoreListener l) {
+        scoreListeners.add(l);
     }
 
     @Override
@@ -103,9 +109,11 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
 
                 if(moved) {
                     mField.doMove(touchedTile.getBlock());
-                    score.setText(Integer.toString(mField.getMoveCount()));
+                    for(ScoreListener l : scoreListeners) {
+                        l.updateMoves(mField.getMoveCount());
+                    }
                     if (FINISHCOORDINATE.matches(finishBlock.getCoordinate()))
-                        finishGame((TextView) parent.findViewById(R.id.textHighScore));
+                        finishGame();
                 }
 
                 mLastDragPoint = null;
@@ -244,9 +252,10 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
         //TODO Undo a block's last move.
     }
 
-    private void finishGame(TextView t) {
-        //TODO Keep a highscore.
-        t.setText(mField.getMoveCount());
+    private void finishGame() {
+        for (ScoreListener l : scoreListeners) {
+            l.updateHighScore(mField.getMoveCount());
+        }
         mTiles.clear();
     }
 
