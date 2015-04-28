@@ -2,7 +2,6 @@ package nl.teamone.settingsun.game;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.util.SparseArray;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
