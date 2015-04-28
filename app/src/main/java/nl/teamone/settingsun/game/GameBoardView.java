@@ -90,31 +90,13 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
             } else if (event.getActionMasked() == MotionEvent.ACTION_UP) {
                 // end of gesture
                 // if drag was over 50% or it's click, do the move
-                if(mMovingOnAxis == Axis.X) {
-                    double mod = mMovedTile.getX() % mTileSize;
-                    float left = (float) (mMovedTile.getX() - mod) + mGameBoardRect.left;
-                    if(mod < mTileSize / 2) {
-                        mMovedTile.setX(left);
-                    } else {
-                        mMovedTile.setX(left + mTileSize);
-                    }
-                } else {
-                    double mod = mMovedTile.getY() % mTileSize;
-                    float top = (float) (mMovedTile.getY() - mod) + mGameBoardRect.top;
-                    if(mod < mTileSize / 2) {
-                        mMovedTile.setY(top);
-                    } else {
-                        mMovedTile.setY(top + mTileSize);
-                    }
-                }
                 if (lastDragMovedAtLeastHalfWay() || isClick()) {
-                    // TODO: animateTilesToEmptySpace();
+                    animateTilesToEmptySpace();
                 } else {
                     // TODO: animateTilesBackToOrigin();
                 }
                 mLastDragPoint = null;
                 mMovedTile = null;
-                mMovingOnAxis = null;
             }
             return true;
         }
@@ -224,7 +206,7 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     private Pair<Float, Float> getXYFromEvent(BoardTileView tile, float dxEvent, float dyEvent) {
         float dxTile = 0, dyTile = 0;
         if(tile != null) {
-            if ((mMovingOnAxis == null && Math.abs(dxEvent) > Math.abs(dyEvent)) || (mMovingOnAxis != null && mMovingOnAxis == Axis.X)) {
+            if (Math.abs(dxEvent) > Math.abs(dyEvent)) {
                 dxTile = tile.getX() + dxEvent;
                 dyTile = tile.getY();
                 mMovingOnAxis = Axis.X;
