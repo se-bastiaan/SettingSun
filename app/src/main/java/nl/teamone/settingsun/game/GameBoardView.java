@@ -4,7 +4,6 @@ package nl.teamone.settingsun.game;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -269,9 +268,8 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
     }
 
     public int undoMove() {
-        Block b = mField.undoMove();
-        if (b != null)
-            undo(b);
+        if (mField.getMoveCount() > 0)
+            undo(mField.popLastMove());
         return mField.getMoveCount();
     }
 
