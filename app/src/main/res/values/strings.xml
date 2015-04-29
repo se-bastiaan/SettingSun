@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">Setting Sun</string>
 
-    <string name="score">Moves</string>
-    <string name="highscore">Best Score</string>
+    <string name="moves">Moves</string>
+    <string name="best_score">Best Score</string>
     <string name="back">Back to last position</string>
     <string name="restart">Restart game</string>
 
-    <string name="greetingTitle">The Setting Sun Puzzle</string>
-    <string name="greetingText">Welcome to the Setting Sun Puzzle. Your goal is to slide the big yellow block down to the bottom, but the other blocks are in the way!</string>
-    <string name="greetingDismiss">Good luck!</string>
+    <string name="greeting_title">The Setting Sun Puzzle</string>
+    <string name="greeting_text">Welcome to the Setting Sun Puzzle. Your goal is to slide the big yellow block down to the bottom, but the other blocks are in the way! Good luck!</string>
+    <string name="greeting_dismiss">Start!</string>
 
     <string name="game_finished_title">Hurray! You finished the game.</string>
     <string name="game_finished">It took you %d steps.</string>

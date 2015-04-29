@@ -1,9 +1,7 @@
 package nl.teamone.settingsun;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -30,9 +28,9 @@ public class MainActivity extends AppCompatActivity implements GameBoardView.Boa
 
         if (mIsFirstRun) {
             AlertDialog greeting = new AlertDialog.Builder(MainActivity.this).create();
-            greeting.setTitle(getString(R.string.greetingTitle));
-            greeting.setMessage(getString(R.string.greetingText));
-            greeting.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.greetingDismiss), new DialogInterface.OnClickListener() {
+            greeting.setTitle(getString(R.string.greeting_title));
+            greeting.setMessage(getString(R.string.greeting_text));
+            greeting.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.greeting_dismiss), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }

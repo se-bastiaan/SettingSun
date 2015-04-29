@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/score_text_title_size"
                 android:textColor="@color/score_text"
-                android:text="@string/score"
+                android:text="@string/moves"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_weight="0.5" />
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/score_text_title_size"
                 android:textColor="@color/score_text"
-                android:text="@string/highscore"
+                android:text="@string/best_score"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:layout_weight="0.5" />
