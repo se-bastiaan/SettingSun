@@ -103,41 +103,46 @@ public class GameBoardView extends RelativeLayout implements View.OnTouchListene
      */
     public boolean onTouch(View v, MotionEvent event) {
         BoardTileView touchedTile = (BoardTileView) v;
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            // start of the gesture
-            mMovedTile = touchedTile;
-            mStartOffsets = new PointF(mMovedTile.getX(), mMovedTile.getY());
-        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
-            // during the gesture
-            if (mCurrentTouchLocation != null) {
-                followDrag(event);
-            }
-            mCurrentTouchLocation = new PointF(event.getRawX(), event.getRawY());
-        } else if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-            // end of gesture
-            // if drag was over 50% or it's click, do the move
-            boolean moved = checkMove();
 
-            if(moved && mMovedTile != null) {
-                int row = (int) (mMovedTile.getY() / mTileSize);
-                int column = (int) (mMovedTile.getX() / mTileSize);
+        if(mMovedTile != null && touchedTile != mMovedTile) return false;
 
-                Block block = mMovedTile.getBlock();
-                block.nextCoordinate(new Coordinate(row, column));
-                mField.didMove(block);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                // start of the gesture
+                mMovedTile = touchedTile;
+                mStartOffsets = new PointF(mMovedTile.getX(), mMovedTile.getY());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                // during the gesture
+                if (mCurrentTouchLocation != null) {
+                    followDrag(event);
+                }
+                mCurrentTouchLocation = new PointF(event.getRawX(), event.getRawY());
+                break;
+            case MotionEvent.ACTION_UP:
+                boolean moved = checkMove();
 
-                for(BoardListener l : mBoardListeners) {
-                    l.didMove(mField.getMoveCount());
+                if(moved && mMovedTile != null) {
+                    int row = (int) (mMovedTile.getY() / mTileSize);
+                    int column = (int) (mMovedTile.getX() / mTileSize);
+
+                    Block block = mMovedTile.getBlock();
+                    block.nextCoordinate(new Coordinate(row, column));
+                    mField.didMove(block);
+
+                    for(BoardListener l : mBoardListeners) {
+                        l.didMove(mField.getMoveCount());
+                    }
+
+                    if (FINISH_COORDINATE.matches(mFinishBlock.getCoordinate())) {
+                        finishGame();
+                    }
                 }
 
-                if (FINISH_COORDINATE.matches(mFinishBlock.getCoordinate())) {
-                    finishGame();
-                }
-            }
-
-            mCurrentTouchLocation = null;
-            mMovedTile = null;
-            mMovingOnAxis = null;
+                mCurrentTouchLocation = null;
+                mMovedTile = null;
+                mMovingOnAxis = null;
+                break;
         }
         return true;
     }
