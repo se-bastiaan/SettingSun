@@ -9,11 +9,23 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
     }
+
+    /*
+    signingConfigs {
+        mainConfig {
+            keyAlias 'SettingSun'
+            keyPassword 'redacted'
+            storeFile file('../../keystore.jks')
+            storePassword 'redacted'
+        }
+    }
+    */
 
     buildTypes {
         release {
+            /*signingConfig signingConfigs.mainConfig*/
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

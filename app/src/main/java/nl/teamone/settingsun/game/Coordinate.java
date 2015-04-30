@@ -29,26 +29,6 @@ public class Coordinate {
 	public boolean matches(Coordinate coordinate) {
 		return coordinate.mRow == mRow && coordinate.mColumn == mColumn;
 	}
-
-	public boolean sharesAxisWith(Coordinate coordinate) {
-		return (mRow == coordinate.mRow || mColumn == coordinate.mColumn);
-	}
-
-	public boolean isToRightOf(Coordinate coordinate) {
-		return sharesAxisWith(coordinate) && (mColumn > coordinate.mColumn);
-	}
-
-	public boolean isToLeftOf(Coordinate coordinate) {
-		return sharesAxisWith(coordinate) && (mColumn < coordinate.mColumn);
-	}
-
-	public boolean isAbove(Coordinate coordinate) {
-		return sharesAxisWith(coordinate) && (mRow < coordinate.mRow);
-	}
-
-	public boolean isBelow(Coordinate coordinate) {
-		return sharesAxisWith(coordinate) && (mRow > coordinate.mRow);
-	}
 	
 	@Override
 	public String toString() {

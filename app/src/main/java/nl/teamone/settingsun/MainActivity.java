@@ -8,10 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import nl.teamone.settingsun.game.BoardListener;
 import nl.teamone.settingsun.game.GameBoardView;
 import nl.teamone.settingsun.utils.PrefUtils;
 
-public class MainActivity extends AppCompatActivity implements GameBoardView.BoardListener {
+/**
+ * Main and only activity in the app
+ */
+public class MainActivity extends AppCompatActivity implements BoardListener {
 
     private TextView mScoreText, mHighScoreText;
     private GameBoardView mGameBoardView;
@@ -52,9 +56,18 @@ public class MainActivity extends AppCompatActivity implements GameBoardView.Boa
 
         mGameBoardView = (GameBoardView) findViewById(R.id.GameBoardView);
         mGameBoardView.addListener(this);
-
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGameBoardView.removeListener(this);
+    }
+
+    /**
+     * Call made by board when the game goal is reached
+     * @param newScore End score
+     */
     public void gameFinished(int newScore) {
         if (mCurrentHighScore > newScore || mCurrentHighScore == 0) {
             PrefUtils.save(this, "highscore", newScore);
@@ -80,10 +93,18 @@ public class MainActivity extends AppCompatActivity implements GameBoardView.Boa
             .create().show();
     }
 
-    public void madeMove(int score) {
+    /**
+     * Move was made on the board
+     * @param score New score
+     */
+    public void didMove(int score) {
         mScoreText.setText(Integer.toString(score));
     }
 
+    /**
+     * Move was undone on the board
+     * @param score New score
+     */
     public void undidMove(int score) {
         mScoreText.setText(Integer.toString(score));
     }
@@ -93,12 +114,22 @@ public class MainActivity extends AppCompatActivity implements GameBoardView.Boa
         mScoreText.setText("0");
     }
 
+    /**
+     * Inflate actionbar menu
+     * @param menu {@link android.view.Menu}
+     * @return Always {@code true}
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * Process selections in the ActionBar menu
+     * @param item {@link android.view.MenuItem}
+     * @return {@code true} when processed, unknown when not
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

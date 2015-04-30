@@ -39,30 +39,6 @@ public class Block {
         setColumn(column);
     }
 
-    public boolean matches(Block pos) {
-        return mCoordinate.matches(pos.getCoordinate()) && (pos.mHeight == mHeight) && (pos.mWidth == mWidth);
-    }
-
-    public boolean sharesAxisWith(Block pos) {
-        return mUsedColumns.contains(pos.getCoordinate().getColumn()) || mUsedRows.contains(pos.getCoordinate().getColumn());
-    }
-
-    public boolean isToRightOf(Block pos) {
-        return mCoordinate.isToRightOf(pos.getCoordinate());
-    }
-
-    public boolean isToLeftOf(Block pos) {
-        return mCoordinate.isToLeftOf(pos.getCoordinate());
-    }
-
-    public boolean isAbove(Block pos) {
-        return mCoordinate.isAbove(pos.getCoordinate());
-    }
-
-    public boolean isBelow(Block pos) {
-        return mCoordinate.isBelow(pos.getCoordinate());
-    }
-
     public void setColumn(int column) {
         mCoordinate.setColumn(column);
 
@@ -107,20 +83,10 @@ public class Block {
         setCoordinate(mCoordinate);
     }
 
-    public Rect generateRect(int tileSize, float gameboardTop, float gameboardLeft) {
-        int offsetTop = (int) Math.floor(gameboardTop);
-        int offsetLeft = (int) Math.floor(gameboardLeft);
-        offsetTop = (getCoordinate().getRow() * tileSize) + offsetTop;
-        offsetLeft = (getCoordinate().getColumn() * tileSize) + offsetLeft;
-        return new Rect(offsetLeft, offsetTop, offsetLeft + tileSize, offsetTop + tileSize);
-    }
-
-    public BoardTileView getView(Context context, int tileSize, float gameboardTop, float gameboardLeft) {
+    public BoardTileView getView(Context context, int tileSize) {
         if(mView == null) {
-            int offsetTop = (int) Math.floor(gameboardTop);
-            int offsetLeft = (int) Math.floor(gameboardLeft);
-            offsetTop = (getCoordinate().getRow() * tileSize) + offsetTop;
-            offsetLeft = (getCoordinate().getColumn() * tileSize) + offsetLeft;
+            int offsetTop = (getCoordinate().getRow() * tileSize);
+            int offsetLeft = (getCoordinate().getColumn() * tileSize);
 
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(tileSize * mWidth, tileSize * mHeight);
             layoutParams.leftMargin = offsetLeft;
