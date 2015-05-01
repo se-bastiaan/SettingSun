@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Setting Sun</string>
+
+    <string name="moves">Zetten</string>
+    <string name="best_score">Beste Score</string>
+    <string name="back">Terug naar de vorige zet</string>
+    <string name="restart">Opnieuw beginnen</string>
+
+    <string name="greeting_title">Setting Sun: een puzzelspel</string>
+    <string name="greeting_text">Welkom! Dit is Setting Sun. Het is de bedoeling dat je het grote gele block helemaal naar beneden verplaatst. Maar helaas staan er wel wat andere blokjes in de weg. Succes!</string>
+    <string name="greeting_dismiss">Start!</string>
+
+    <string name="game_finished_title">Hoera! Je hebt de oplossing gevonden.</string>
+    <string name="game_finished">Je hebt er %d zetten over gedaan.</string>
+    <string name="close">Sluiten</string>
+
+    <string name="sure_title">Weet je het zeker?</string>
+    <string name="sure">Als je deze optie gebruikt ga je helemaal terug naar de startpositie. Je zult compleet overnieuw moeten beginnen.</string>
+</resources>

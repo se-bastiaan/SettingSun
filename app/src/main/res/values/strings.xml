@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Setting Sun</string>
 
@@ -16,6 +17,4 @@
 
     <string name="sure_title">Are you sure?</string>
     <string name="sure">Using this option will reset your game. You\'ll have to restart.</string>
-
-    <string name="action_settings">Settings</string>
 </resources>
